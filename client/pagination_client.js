@@ -1,12 +1,16 @@
 MPagination = function MPagination(options) {
 	var opts = {
 			templateName: '',
-			templateInstance: this,
+			templateInstance: undefined,
 			perPageCount: 50,
 			currentPage: 1,
 			resultCount: 0,
 			sort: {},
-			query: {}
+			query: {},
+			onBeforeClicks: undefined,
+			onBeforePreviousClicks: undefined,
+			onBeforeNextClicks: undefined,
+			onBeforePageClicks: undefined
 		};
 
 	// extend with the new options
@@ -25,7 +29,7 @@ MPagination = function MPagination(options) {
 	templateInstance.query = new ReactiveVar(opts.query);
 
 	template.events({
-		'click .prev a': function(e) {
+		'click .prev a': function(e, tpl) {
 			e.preventDefault();
 
 			var currentPage = templateInstance.currentPage.get();
@@ -33,11 +37,14 @@ MPagination = function MPagination(options) {
 			currentPage--;
 
 			if (currentPage >= 1) {
+				opts.onBeforeClicks && opts.onBeforeClicks();
+				opts.onBeforePreviousClicks && opts.onBeforePreviousClicks();
+
 				templateInstance.currentPage.set(currentPage);
 			}
 		},
 
-		'click .next a': function(e) {
+		'click .next a': function(e, tpl) {
 			e.preventDefault();
 
 			var currentPage = templateInstance.currentPage.get(),
@@ -48,12 +55,18 @@ MPagination = function MPagination(options) {
 			currentPage++;
 
 			if (currentPage <= pagesCount) {
+				opts.onBeforeClicks && opts.onBeforeClicks();
+				opts.onBeforeNextClicks && opts.onBeforeNextClicks();
+
 				templateInstance.currentPage.set(currentPage);
 			}
 		},
 
 		'click .page a': function(e, tpl) {
 			e.preventDefault();
+
+			opts.onBeforeClicks && opts.onBeforeClicks();
+			opts.onBeforePageClicks && opts.onBeforePageClicks();
 
 			templateInstance.currentPage.set(this.pageNumber);
 		}
