@@ -28,8 +28,75 @@ MPagination = function MPagination(options) {
 	templateInstance.sort = new ReactiveVar(opts.sort);
 	templateInstance.query = new ReactiveVar(opts.query);
 
-	template.events({
-		'click .prev a': function(e, tpl) {
+	Template.MPaginationControl = new Blaze.Template('Template.MPaginationControl', function() {
+		return Template._MPaginationControl;
+	});
+
+	var paginationHelpers = {
+		'class': function() {
+			if (Template.instance().data) {
+				return Template.instance().data.class;
+			}
+		},
+
+		'prevClass': function() {
+			if (Template.instance().data) {
+				return Template.instance().data.prevClass || 'prev';
+			}
+		},
+
+		'pageClass': function() {
+			if (Template.instance().data) {
+				return Template.instance().data.pageClass || 'page';
+			}
+		},
+
+		'nextClass': function() {
+			if (Template.instance().data) {
+				return Template.instance().data.nextClass || 'next';
+			}
+		},
+
+		'searchResultCount': function() {
+			var count = templateInstance.resultCount.get();
+
+			return templateInstance.resultCount.get() + (count === 1 ? ' item' : ' items');
+		},
+
+		'isPrevDisabled': function() {
+			return templateInstance.currentPage.get() === 1 ? 'disabled' : '';
+		},
+
+		'isNextDisabled': function() {
+			var perPageCount = templateInstance.perPageCount.get(),
+				resultCount = templateInstance.resultCount.get(),
+				pagesCount = Math.ceil(resultCount / perPageCount);
+
+			return templateInstance.currentPage.get() >= pagesCount ? 'disabled' : '';
+		},
+
+		'isActive': function() {
+			return templateInstance.currentPage.get() === this.pageNumber ? 'active' : '';
+		},
+
+		'pages': function() {
+			var perPageCount = templateInstance.perPageCount.get(),
+				resultCount = templateInstance.resultCount.get(),
+				pagesCount = Math.ceil(resultCount / perPageCount),
+				pagesArray = [];
+
+			for (var x = 1; x <= pagesCount; x++) {
+				pagesArray.push({
+					pageNumber: x
+				});
+			}
+
+			return pagesArray;
+		}
+	};
+
+	var paginationEvents = {
+		'click .prev a': function(e) {
 			e.preventDefault();
 
 			var currentPage = templateInstance.currentPage.get();
@@ -44,7 +111,7 @@ MPagination = function MPagination(options) {
 			}
 		},
 
-		'click .next a': function(e, tpl) {
+		'click .next a': function(e) {
 			e.preventDefault();
 
 			var currentPage = templateInstance.currentPage.get(),
@@ -62,7 +129,7 @@ MPagination = function MPagination(options) {
 			}
 		},
 
-		'click .page a': function(e, tpl) {
+		'click .page a': function(e) {
 			e.preventDefault();
 
 			opts.onBeforeClicks && opts.onBeforeClicks();
@@ -70,44 +137,11 @@ MPagination = function MPagination(options) {
 
 			templateInstance.currentPage.set(this.pageNumber);
 		}
-	});
+	};
 
-	template.helpers({
-		'isPrevDisabled': function() {
-			return templateInstance.currentPage.get() === 1 ? 'disabled' : '';
-		},
+	template.helpers(paginationHelpers);
+	Template._MPaginationControl.helpers(paginationHelpers);
 
-		'isNextDisabled': function() {
-			var perPageCount = templateInstance.perPageCount.get(),
-				resultCount = templateInstance.resultCount.get(),
-				pagesCount = Math.ceil(resultCount / perPageCount);
-
-			return templateInstance.currentPage.get() >= pagesCount ? 'disabled' : '';
-		},
-
-		'isActive': function() {
-			return templateInstance.currentPage.get() === this.pageNumber ? 'active' : '';
-		},
-
-		'searchResultCount': function() {
-			var count = templateInstance.resultCount.get();
-
-			return templateInstance.resultCount.get() + (count === 1 ? ' item' : ' items');
-		},
-
-		'pages': function() {
-			var perPageCount = templateInstance.perPageCount.get(),
-				resultCount = templateInstance.resultCount.get(),
-				pagesCount = Math.ceil(resultCount / perPageCount),
-				pagesArray = [];
-
-			for (var x = 1; x <= pagesCount; x++) {
-				pagesArray.push({
-					pageNumber: x
-				});
-			}
-
-			return pagesArray;
-		}
-	});
+	template.events(paginationEvents);
+	Template._MPaginationControl.events(paginationEvents);
 };
