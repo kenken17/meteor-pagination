@@ -1,7 +1,7 @@
 Package.describe({
 	name: 'kenken:meteor-pagination',
 	summary: 'A naive way to implement pagination just to reduce boiler plate code.',
-	version: '1.1.1',
+	version: '1.2.0',
 	git: 'https://github.com/kenken17/meteor-pagination'
 });
 
@@ -10,11 +10,12 @@ Package.onUse(function(api) {
 
 	// Meteor dependencies
 	api.use('templating');
-	api.use('blaze');
 	api.use('underscore');
 	api.use('reactive-var');
 
 	api.addFiles('client/pagination_client.js', 'client');
+	api.addFiles('client/pagination_control.html', 'client');
+	//api.addFiles('client/pagination_control.js', 'client');
 
 	if (api.export) {
 		api.export('MPagination');
