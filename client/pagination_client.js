@@ -1,12 +1,10 @@
 MPagination = function MPagination(options) {
 	var opts = {
-			templateName: '',
+			templateName: undefined,
 			templateInstance: undefined,
 			perPageCount: 50,
 			currentPage: 1,
 			resultCount: 0,
-			sort: {},
-			query: {},
 			onBeforeClicks: undefined,
 			onBeforePreviousClicks: undefined,
 			onBeforeNextClicks: undefined,
@@ -25,8 +23,6 @@ MPagination = function MPagination(options) {
 	templateInstance.perPageCount = new ReactiveVar(opts.perPageCount);
 	templateInstance.currentPage = new ReactiveVar(opts.currentPage);
 	templateInstance.resultCount = new ReactiveVar(opts.resultCount);
-	templateInstance.sort = new ReactiveVar(opts.sort);
-	templateInstance.query = new ReactiveVar(opts.query);
 
 	Template.MPaginationControl = new Blaze.Template('Template.MPaginationControl', function() {
 		return Template._MPaginationControl;
@@ -41,19 +37,19 @@ MPagination = function MPagination(options) {
 
 		'prevClass': function() {
 			if (Template.instance().data) {
-				return Template.instance().data.prevClass || 'prev';
+				return Template.instance().data.prevClass;
 			}
 		},
 
 		'pageClass': function() {
 			if (Template.instance().data) {
-				return Template.instance().data.pageClass || 'page';
+				return Template.instance().data.pageClass;
 			}
 		},
 
 		'nextClass': function() {
 			if (Template.instance().data) {
-				return Template.instance().data.nextClass || 'next';
+				return Template.instance().data.nextClass;
 			}
 		},
 

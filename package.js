@@ -1,7 +1,7 @@
 Package.describe({
 	name: 'kenken:meteor-pagination',
 	summary: 'A naive way to implement pagination just to reduce boiler plate code.',
-	version: '1.2.0',
+	version: '1.2.1',
 	git: 'https://github.com/kenken17/meteor-pagination'
 });
 

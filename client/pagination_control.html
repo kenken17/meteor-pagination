@@ -1,14 +1,14 @@
 <template name="_MPaginationControl">
-	<ul class="{{class}} pagination">
-		<li class="{{prevClass}} {{isPrevDisabled}}">
+	<ul class="pagination {{class}}">
+		<li class="prev {{prevClass}} {{isPrevDisabled}}">
 			<a href="#" title="Prev"><i class="fa fa-angle-left"></i></a>
 		</li>
 		{{#each pages}}
-		<li class="{{pageClass}} {{isActive}}">
+		<li class="page {{pageClass}} {{isActive}}">
 			<a href="#">{{pageNumber}}</a>
 		</li>
 		{{/each}}
-		<li class="{{nextClass}} {{isNextDisabled}}">
+		<li class="next {{nextClass}} {{isNextDisabled}}">
 			<a href="#" title="Next"><i class="fa fa-angle-right"></i></a>
 		</li>
 	</ul>
