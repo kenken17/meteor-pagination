@@ -54,9 +54,7 @@ MPagination = function MPagination(options) {
 		},
 
 		'searchResultCount': function() {
-			var count = templateInstance.resultCount.get();
-
-			return templateInstance.resultCount.get() + (count === 1 ? ' item' : ' items');
+			return templateInstance.resultCount.get();
 		},
 
 		'isPrevDisabled': function() {
