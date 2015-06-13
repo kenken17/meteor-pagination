@@ -17,9 +17,10 @@ The idea behind the package is to extract all boilerplate code for making a basi
 
 ```javascript
 Meteor.publish('items', function(opts) {
-	var query = _.extend(opts && opts.query ? opts.query : {}),
+	var query =  opts && opts.query ? opts.query : {},
 		modifier = {};
 
+	// we are using tmeasday:publish-counts here to publish the item counts
 	Counts.publish(this, 'itemsCount', Items.find(query), {noReady: true});
 
 	if (opts) {
@@ -44,14 +45,6 @@ Template.itemsListing.onCreated(function() {
 		perPageCount: 25,
 		currentPage: 1,
 		resultCount: 0,
-		sort: {
-			modifiedAt: -1
-		},
-		query: {
-			status: {
-				$in: ['active']
-			}
-		},
 		onBeforeClicks: function () {},
 		onBeforePreviousClicks: function () {},
 		onBeforeNextClicks: function () {},
@@ -91,11 +84,13 @@ There are four hooks for the clicks:
 - `onBeforeClicks`: call before all click events above.
 - `onBeforePreviousClicks`: call before `previous` link is clicked.
 - `onBeforeNextClicks`: call before `next` link is clicked.
-- `onBeforePageClicks`: call before `page` link is clicked.
+- `onBeforePageClicks`: call before `page` link(s) is clicked.
 
 ---
 
 /client/itemsListing.html
+
+**options 1:** *making use of manual helpers*
 
 ```html
 	{{#each searchResult}}
@@ -109,7 +104,7 @@ There are four hooks for the clicks:
 	</tr>
 	{{/each}}
 
-	<ul class="pagination pagination-sm pull-right">
+	<ul class="pagination">
 		<li class="prev {{isPrevDisabled}}">
 			<a href="#" title="Prev"><i class="fa fa-angle-left"></i></a>
 		</li>
@@ -124,11 +119,37 @@ There are four hooks for the clicks:
 	</ul>
 ```
 
-Template Helpers:
-
 - `{{searchResult}}`: returns result of the collection.
 - `{{isPrevDisabled}}`: returns `true`, where there is no more *previous* page.
 - `{{pages}}`: All the pages, which consists of the `{{pageNumber}}`.
 - `{{isActive}}`: returns a string `active` when the current page is in view.
 - `{{isNextDisabled}}`: returns `true`, where there is no more *next* page.
+
+---
+
+**options 2:** *making use of ready template*
+
+```html
+	{{#each searchResult}}
+	<tr>
+		<td>{{propery1}}</td>
+		<td>{{propery2}}</td>
+	</tr>
+	{{else}}
+	<tr>
+		<td colspan="2">No item found.</td>
+	</tr>
+	{{/each}}
+
+	{{> MPaginationControl class="customClass" prevClass="prevClass" nextClass="nextClass" pageClass="pageClass"}}
+```
+
+- `{{> MPaginationControl}}`: returns similar to `options 1` html markup. But it can  take in attributes.
+- `class`: the class for the root element of the control, i.e. `<ul>`
+- `prevClass`: the class for `previous` link
+- `nextClass`: the class for `next` link
+- `pageClass`: the class for `page` link(s)
+
+
+
 
