@@ -103,6 +103,8 @@ MPagination = function MPagination(options) {
 
 				templateInstance.currentPage.set(currentPage);
 			}
+
+			return false;
 		},
 
 		'click .next a': function(e) {
@@ -121,6 +123,8 @@ MPagination = function MPagination(options) {
 
 				templateInstance.currentPage.set(currentPage);
 			}
+
+			return false;
 		},
 
 		'click .page a': function(e) {
@@ -130,6 +134,8 @@ MPagination = function MPagination(options) {
 			opts.onBeforePageClicks && opts.onBeforePageClicks();
 
 			templateInstance.currentPage.set(this.pageNumber);
+
+			return false;
 		}
 	};
 
